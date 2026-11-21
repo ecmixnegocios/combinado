@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { useApp } from "./AppProvider";
 import { AvatarUploader } from "./AvatarUploader";
-import { formatWhatsApp, cleanDigits } from "@/utils/validators";
+import { formatWhatsApp, formatCPF, validateCPF, cleanDigits } from "@/utils/validators";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
 
 export function QuickAuthModal() {
@@ -39,6 +39,7 @@ export function QuickAuthModal() {
   const [roleChoice, setRoleChoice] = useState<"client" | "provider">("client");
   const [fullName, setFullName] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [cpf, setCpf] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,6 +63,7 @@ export function QuickAuthModal() {
   const resetFormState = () => {
     setFullName("");
     setDisplayName("");
+    setCpf("");
     setWhatsapp("");
     setEmail("");
     setPassword("");
@@ -79,6 +81,10 @@ export function QuickAuthModal() {
     setInfoMessage(null);
     if (fullName.trim().length < 3) {
       setError("Informe seu nome completo.");
+      return;
+    }
+    if (!validateCPF(cpf)) {
+      setError("Informe um CPF válido (11 dígitos).");
       return;
     }
     if (cleanDigits(whatsapp).length < 10) {
@@ -100,6 +106,7 @@ export function QuickAuthModal() {
       const res = await signUpWithSupabase({
         full_name: fullName,
         display_name: displayName || fullName.split(" ")[0],
+        cpf,
         whatsapp,
         email,
         password,
@@ -143,6 +150,7 @@ export function QuickAuthModal() {
       const res = await signUpWithSupabase({
         full_name: fullName,
         display_name: displayName || fullName.split(" ")[0],
+        cpf,
         whatsapp,
         email,
         password,
@@ -367,6 +375,20 @@ export function QuickAuthModal() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Ex: Maria Silva"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-[#0F1A24]/15 text-sm focus:outline-none focus:ring-2 focus:ring-[#00B048]/30 focus:border-[#00B048]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#121d27] mb-1">
+                CPF *
+              </label>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={cpf}
+                onChange={(e) => setCpf(formatCPF(e.target.value))}
+                placeholder="000.000.000-00"
                 className="w-full px-3.5 py-2.5 rounded-lg border border-[#0F1A24]/15 text-sm focus:outline-none focus:ring-2 focus:ring-[#00B048]/30 focus:border-[#00B048]"
               />
             </div>

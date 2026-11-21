@@ -84,12 +84,14 @@ interface AppContextValue {
     full_name: string;
     display_name: string;
     whatsapp: string;
+    cpf?: string;
     avatar_url?: string | null;
   }) => void;
   signUpWithSupabase: (data: {
     full_name: string;
     display_name: string;
     whatsapp: string;
+    cpf?: string;
     email: string;
     password: string;
     avatar_url?: string | null;
@@ -643,6 +645,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     full_name: string;
     display_name: string;
     whatsapp: string;
+    cpf?: string;
     avatar_url?: string | null;
   }) => {
     const cleanPhone = cleanDigits(data.whatsapp);
@@ -682,6 +685,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     full_name: string;
     display_name: string;
     whatsapp: string;
+    cpf?: string;
     email: string;
     password: string;
     avatar_url?: string | null;
@@ -696,6 +700,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const trimmedDisplay =
       data.display_name.trim() || trimmedFull.split(" ")[0];
     const cleanPhone = cleanDigits(data.whatsapp);
+    const cleanCpf = cleanDigits(data.cpf || "");
 
     const { data: authData, error: authErr } = await supabase.auth.signUp({
       email: data.email.trim(),
@@ -705,6 +710,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           full_name: trimmedFull,
           display_name: trimmedDisplay,
           whatsapp: cleanPhone,
+          ...(cleanCpf ? { cpf: cleanCpf } : {}),
         },
       },
     });
