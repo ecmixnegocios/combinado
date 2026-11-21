@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import {
   AlertTriangle,
   CheckCircle2,
+  Eye,
+  EyeOff,
   KeyRound,
   Lock,
   Mail,
@@ -40,6 +42,7 @@ export function QuickAuthModal() {
   const [whatsapp, setWhatsapp] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState("");
   const [step, setStep] = useState<"form" | "otp">("form");
   const [generatedOtp, setGeneratedOtp] = useState("");
@@ -289,12 +292,20 @@ export function QuickAuthModal() {
               <div className="relative">
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Sua senha"
-                  className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-[#0F1A24]/15 text-sm focus:outline-none focus:ring-2 focus:ring-[#00B048]/30 focus:border-[#00B048]"
+                  className="w-full pl-9 pr-10 py-2.5 rounded-lg border border-[#0F1A24]/15 text-sm focus:outline-none focus:ring-2 focus:ring-[#00B048]/30 focus:border-[#00B048]"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? "Ocultar senha" : "Visualizar senha"}
+                  className="absolute right-2.5 top-2.5 p-1 text-slate-400 hover:text-slate-700 cursor-pointer"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
 
@@ -410,18 +421,29 @@ export function QuickAuthModal() {
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-[#121d27] mb-1">
-                    Senha (mín. 6) *
+                    Senha *
                   </label>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••"
-                      className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-[#0F1A24]/15 text-sm focus:outline-none focus:ring-2 focus:ring-[#00B048]/30 focus:border-[#00B048]"
+                      className="w-full pl-9 pr-10 py-2.5 rounded-lg border border-[#0F1A24]/15 text-sm focus:outline-none focus:ring-2 focus:ring-[#00B048]/30 focus:border-[#00B048]"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      aria-label={showPassword ? "Ocultar senha" : "Visualizar senha"}
+                      className="absolute right-2.5 top-2.5 p-1 text-slate-400 hover:text-slate-700 cursor-pointer"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
                   </div>
+                  <p className="text-[11px] text-[#3d4a3c] mt-1">
+                    Mínimo de 6 caracteres (recomendado misturar letras e números).
+                  </p>
                 </div>
               </div>
             )}
