@@ -70,7 +70,7 @@ export function QuickAuthModal() {
     setInfoMessage(null);
   };
 
-  const handleRequestOtp = (e: React.FormEvent) => {
+  const handleRequestOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setInfoMessage(null);
@@ -91,6 +91,34 @@ export function QuickAuthModal() {
         setError("A senha deve ter pelo menos 6 caracteres.");
         return;
       }
+
+      const goProvider = roleChoice === "provider";
+      setIsSubmitting(true);
+      const res = await signUpWithSupabase({
+        full_name: fullName,
+        display_name: displayName || fullName.split(" ")[0],
+        whatsapp,
+        email,
+        password,
+        avatar_url: avatarUrl.trim() || null,
+      });
+      setIsSubmitting(false);
+
+      if (!res.ok) {
+        setError(res.error || "Não foi possível criar sua conta.");
+        return;
+      }
+      if (res.needsEmailConfirm) {
+        setInfoMessage(
+          "Conta criada! Enviamos um link de confirmação para o seu e-mail. Confirme-o para entrar."
+        );
+        return;
+      }
+      resetFormState();
+      if (goProvider) {
+        router.push("/painel?modo=prestador");
+      }
+      return;
     }
     generateNewOtp();
     setStep("otp");
@@ -190,7 +218,9 @@ export function QuickAuthModal() {
 
         <p className="text-sm text-[#3d4a3c] mb-4">
           {authModalReason ||
-            "Escolha como deseja usar o Combinado e confirme seu WhatsApp em segundos."}
+            (supabaseEnabled
+              ? "Escolha como deseja usar o Combinado e crie sua conta em segundos."
+              : "Escolha como deseja usar o Combinado e confirme seu WhatsApp em segundos.")}
         </p>
 
         {supabaseEnabled && (
@@ -416,12 +446,34 @@ export function QuickAuthModal() {
 
             <button
               type="submit"
-              className="w-full py-3 rounded-full bg-[#EA580C] hover:bg-[#C2410C] text-white font-semibold text-sm shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
+              disabled={isSubmitting}
+              className="w-full py-3 rounded-full bg-[#EA580C] hover:bg-[#C2410C] disabled:opacity-60 text-white font-semibold text-sm shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
             >
-              <MessageCircle className="w-4 h-4" />
-              {roleChoice === "provider"
-                ? "Confirmar WhatsApp e Completar Perfil"
-                : "Enviar Código no WhatsApp"}
+              {supabaseEnabled ? (
+                <>
+                  <CheckCircle2 className="w-4 h-4" />
+                  {isSubmitting
+                    ? "Criando conta..."
+                    : roleChoice === "provider"
+                      ? "Criar Conta e Completar Perfil"
+                      : "Criar Conta e Entrar"}
+                </>
+              ) : (
+                <>
+                  <MessageCircle className="w-4 h-4" />
+                  {roleChoice === "provider"
+                    ? "Confirmar WhatsApp e Completar Perfil"
+                    : "Enviar Código no WhatsApp"}
+                </>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={closeAuthModal}
+              className="w-full py-2 text-xs font-semibold text-[#3d4a3c] hover:text-[#121d27] hover:underline cursor-pointer"
+            >
+              ← Voltar
             </button>
           </form>
         ) : (
