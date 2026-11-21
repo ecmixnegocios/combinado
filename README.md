@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Combinado! — Catálogo de Serviços Locais (MVP)
 
-## Getting Started
+Plataforma Mobile-First / PWA para contratação rápida de prestadores de serviços locais via WhatsApp, com sistema de ranking e **Trava de Avaliação Mútua Obrigatória (24h)**.
 
-First, run the development server:
+## Rodando localmente (Modo Mock Data)
+
+O projeto já vem pronto para validação visual e funcional com **Mock Data** (10 profissionais, 8 categorias, banner e avaliações iniciais) persistido em `localStorage`:
 
 ```bash
+cd web
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### O que testar no Modo Demo
+- **Catálogo e Ranking:** Busque por termo/bairro ou navegue pelas 8 categorias. Profissionais indisponíveis ficam no final da fila em destaque acinzentado.
+- **Desbloqueio de WhatsApp:** Entre em `/profissional/[id]` e clique em *Falar no WhatsApp Agora* (como visitante, abre o cadastro rápido em 10s).
+- **Trava Obrigatória de 24h:** No `/painel`, clique em **Simular Trava de 24h** para testar o modal bloqueante que exige nota + comentário antes de continuar navegando.
+- **Modo Prestador e Validação de CPF:** No `/painel`, teste a chave Liga/Desliga de disponibilidade ou ative o modo profissional com validação matemática de CPF.
+- **Painel Admin (`/admin`):** Entre como Admin no acesso rápido para gerenciar banners, banir/desbanir usuários, moderar comentários e gerenciar categorias.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Conectando ao Supabase (Produção)
 
-To learn more about Next.js, take a look at the following resources:
+1. Crie um projeto no [Supabase](https://supabase.com).
+2. No **SQL Editor** do Supabase, execute o arquivo [`supabase/schema.sql`](./supabase/schema.sql) para criar todas as tabelas, índices, triggers de recálculo de notas, view pública e políticas RLS.
+3. Crie um bucket público no **Supabase Storage** chamado `avatars` e outro chamado `banners` (para upload de fotos).
+4. Em **Authentication -> Providers**, habilite **Email** e **Google OAuth** (opcional).
+5. Crie um arquivo `.env.local` na raiz de `web/` com as suas chaves:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sua-chave-anon-publica
+SUPABASE_SERVICE_ROLE_KEY=sua-chave-service-role-secreta
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> **Nota sobre o `seed.sql`:** Em produção, `profiles.id` referencia `auth.users(id)`. Para popular dados reais no Supabase, crie os usuários de teste no Auth ou ajuste temporariamente a FK durante a carga inicial.
