@@ -4,10 +4,10 @@ export function Footer() {
   return (
     <footer className="border-t border-[#0F1A24]/8 bg-white text-[#121d27]">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 py-7 sm:py-8 flex flex-col items-center text-center">
-        {/* Logo discreto em cinza no rodapé + Slogan logo abaixo */}
-        <Link href="/" className="inline-flex items-center group opacity-85 hover:opacity-100 transition-opacity">
+        {/* Logo no rodapé + Slogan logo abaixo */}
+        <Link href="/" className="inline-flex items-center group opacity-95 hover:opacity-100 transition-opacity">
           <img
-            src="/brand/logo-v4.png"
+            src="/brand/logo-v2.png"
             alt="Combinado"
             className="h-7 sm:h-8 w-auto object-contain"
           />
