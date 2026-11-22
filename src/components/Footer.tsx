@@ -17,8 +17,48 @@ export function Footer() {
           Conectando quem precisa a quem faz.
         </p>
 
+        {/* Links institucionais */}
+        <nav
+          aria-label="Links institucionais"
+          className="mt-4 flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 gap-y-1.5 text-xs font-medium text-[#3d4a3c]"
+        >
+          <Link href="/sobre" className="hover:text-[#006e2a] transition-colors">
+            Sobre
+          </Link>
+          <span className="text-slate-300" aria-hidden="true">
+            •
+          </span>
+          <Link href="/quem-somos" className="hover:text-[#006e2a] transition-colors">
+            Quem Somos
+          </Link>
+          <span className="text-slate-300" aria-hidden="true">
+            •
+          </span>
+          <Link href="/duvidas" className="hover:text-[#006e2a] transition-colors">
+            Dúvidas Frequentes
+          </Link>
+          <span className="text-slate-300" aria-hidden="true">
+            •
+          </span>
+          <Link href="/termos" className="hover:text-[#006e2a] transition-colors">
+            Termos e Condições
+          </Link>
+          <span className="text-slate-300" aria-hidden="true">
+            •
+          </span>
+          <Link href="/privacidade" className="hover:text-[#006e2a] transition-colors">
+            Política de Privacidade
+          </Link>
+          <span className="text-slate-300" aria-hidden="true">
+            •
+          </span>
+          <Link href="/suporte" className="hover:text-[#006e2a] transition-colors">
+            Suporte
+          </Link>
+        </nav>
+
         {/* Copyright */}
-        <p className="mt-4 text-[11px] text-slate-400">
+        <p className="mt-3 text-[11px] text-slate-400">
           © {new Date().getFullYear()} Combinado • Todos os direitos reservados
         </p>
       </div>
