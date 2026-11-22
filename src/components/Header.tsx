@@ -123,7 +123,9 @@ export function Header() {
             {currentUser ? (
               <Link
                 href="/painel"
-                className="relative inline-flex items-center gap-2 pl-1.5 pr-3 py-1 rounded-full border border-[#0F1A24]/12 bg-[#F6F8FC] hover:bg-[#edf4ff] transition-colors"
+                title={currentUser.display_name}
+                aria-label={`Meu painel (${currentUser.display_name})`}
+                className="relative inline-flex items-center sm:gap-2 p-1 sm:pl-1.5 sm:pr-3 sm:py-1 rounded-full border border-[#0F1A24]/12 bg-[#F6F8FC] hover:bg-[#edf4ff] transition-colors shrink-0"
               >
                 {currentUser.avatar_url ? (
                   <img
@@ -136,13 +138,13 @@ export function Header() {
                     {currentUser.display_name.charAt(0).toUpperCase()}
                   </span>
                 )}
-                <span className="text-xs sm:text-sm font-semibold text-[#121d27] max-w-[90px] sm:max-w-[140px] truncate">
+                <span className="hidden sm:inline text-sm font-semibold text-[#121d27] max-w-[140px] truncate">
                   {currentUser.display_name.split(" ")[0]}
                 </span>
                 {pendingReviews.length > 0 && (
                   <span
                     title="Avaliações pendentes"
-                    className="w-2.5 h-2.5 rounded-full bg-[#EA580C] ring-2 ring-white"
+                    className="absolute -top-0.5 -right-0.5 sm:static w-2.5 h-2.5 rounded-full bg-[#EA580C] ring-2 ring-white"
                   />
                 )}
               </Link>
