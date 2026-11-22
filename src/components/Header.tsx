@@ -34,7 +34,7 @@ export function Header() {
             <span className="inline-flex items-center gap-1.5 font-medium text-white/90 truncate">
               <MapPin className="w-3 h-3 text-[#7ED957] shrink-0" />
               <span className="truncate">
-                Catálogo exclusivo de <strong className="text-white">Boa Vista - RR</strong>
+                Catálogo de profissionais de <strong className="text-white">Boa Vista - RR</strong>
               </span>
             </span>
 
