@@ -2,19 +2,18 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Award, BadgeCheck, ChevronRight, Clock, Crown, ExternalLink, MapPin, Search, Share2, ShieldCheck, Sparkles } from "lucide-react";
+import { Award, BadgeCheck, ChevronRight, Clock, Crown, MapPin, Search, Share2, ShieldCheck } from "lucide-react";
 import { useApp } from "@/components/AppProvider";
 import { CategoryIcon } from "@/components/CategoryIcon";
 import { ProviderCard } from "@/components/ProviderCard";
 import { ReputationThermometer } from "@/components/ReputationThermometer";
 import { ShareHighlightModal } from "@/components/ShareHighlightModal";
-import { AdvertiseHereBanner } from "@/components/AdvertiseHereBanner";
 import { BOA_VISTA_NEIGHBORHOODS } from "@/lib/neighborhoods";
 import { ProviderCatalogItem } from "@/types/database";
 import { formatProviderTitle } from "@/utils/validators";
 
 export default function HomePage() {
-  const { currentUser, activeBanner, categoriesWithCounts, getCatalogProviders } = useApp();
+  const { currentUser, categoriesWithCounts, getCatalogProviders } = useApp();
   const [searchQuery, setSearchQuery] = useState("");
   const [neighborhoodFilter, setNeighborhoodFilter] = useState("");
   const [activeCatSlug, setActiveCatSlug] = useState<string>("pedreiros");
@@ -527,42 +526,6 @@ export default function HomePage() {
           )}
         </div>
       </section>
-
-      {/* Banner Único do Dia (Tela Inicial — 1 por dia, ou CTA Anuncie Aqui) */}
-      {!isFiltering &&
-        (activeBanner ? (
-          <a
-            href={activeBanner.target_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group relative block overflow-hidden rounded-2xl bg-[#0F1A24] shadow-[var(--shadow-level-1)] hover:shadow-[var(--shadow-level-2)] transition-all"
-          >
-            <div className="relative h-28 sm:h-32 w-full">
-              <img
-                src={activeBanner.image_url}
-                alt={activeBanner.title}
-                className="w-full h-full object-cover opacity-50 group-hover:scale-[1.02] transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#050C16]/90 via-[#050C16]/65 to-transparent" />
-              <div className="absolute inset-0 p-4 sm:p-6 flex items-center justify-between gap-4">
-                <div className="space-y-1.5 min-w-0">
-                  <span className="inline-flex items-center gap-1.5 w-fit px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur-sm text-[10px] sm:text-[11px] font-bold text-[#7ED957]">
-                    <Sparkles className="w-3 h-3" />
-                    Parceiro do Dia · Boa Vista
-                  </span>
-                  <h2 className="font-display font-bold text-sm sm:text-lg text-white line-clamp-2 leading-snug">
-                    {activeBanner.title}
-                  </h2>
-                </div>
-                <span className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#00B048] text-white text-xs font-semibold shrink-0">
-                  Ver Oferta <ExternalLink className="w-3.5 h-3.5" />
-                </span>
-              </div>
-            </div>
-          </a>
-        ) : (
-          <AdvertiseHereBanner contextLabel="Espaço Disponível · Parceiro do Dia na Tela Inicial" />
-        ))}
 
       {isFiltering ? (
         <>

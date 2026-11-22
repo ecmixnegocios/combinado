@@ -5,22 +5,17 @@ export function Footer() {
     <footer className="border-t border-[#0F1A24]/8 bg-white text-[#121d27]">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 py-8 sm:py-10 flex flex-col items-center text-center space-y-4">
         {/* Logo discreto em cinza no rodapé */}
-        <Link href="/" className="inline-flex items-center gap-2 group opacity-75 hover:opacity-100 transition-opacity">
-          <span className="w-7 h-7 rounded-lg bg-slate-100 border border-slate-200 p-1 flex items-center justify-center shrink-0">
-            <img
-              src="/brand/logo-gray.png"
-              alt="Combinado"
-              className="w-full h-full object-contain"
-            />
-          </span>
-          <span className="font-display font-bold text-lg leading-none tracking-tight text-slate-400">
-            Combinado
-          </span>
+        <Link href="/" className="inline-flex items-center group opacity-85 hover:opacity-100 transition-opacity">
+          <img
+            src="/brand/logo-v4.png"
+            alt="Combinado"
+            className="h-7 sm:h-8 w-auto object-contain"
+          />
         </Link>
 
-        {/* Descrição curta */}
-        <p className="text-xs sm:text-sm text-[#3d4a3c] max-w-md leading-relaxed">
-          Conectando você a profissionais locais de confiança, com avaliação transparente e contato direto no WhatsApp.
+        {/* Slogan */}
+        <p className="text-xs sm:text-sm font-medium text-[#3d4a3c] max-w-md leading-relaxed">
+          Conectando quem precisa a quem faz.
         </p>
 
         {/* Links essenciais centralizados */}

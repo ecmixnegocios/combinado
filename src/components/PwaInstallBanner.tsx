@@ -9,20 +9,20 @@ export function PwaInstallBanner() {
   if (dismissed) return null;
 
   return (
-    <div className="fixed bottom-3 left-3 right-3 z-30 md:hidden">
-      <div className="rounded-2xl bg-[#0F1A24] text-white p-3.5 shadow-[var(--shadow-level-3)] border border-white/10 flex items-start gap-3">
-        <span className="w-10 h-10 rounded-xl bg-[#00B048] flex items-center justify-center shrink-0">
-          <Download className="w-5 h-5" />
+    <div className="fixed bottom-16 left-3 right-3 z-30 md:hidden">
+      <div className="rounded-xl bg-[#0F1A24]/95 backdrop-blur-md text-white px-3 py-2.5 shadow-[var(--shadow-level-2)] border border-white/10 flex items-center gap-2.5">
+        <span className="w-8 h-8 rounded-lg bg-[#00B048] flex items-center justify-center shrink-0">
+          <Download className="w-4 h-4" />
         </span>
 
         <div className="flex-1 min-w-0">
-          <p className="font-display font-semibold text-sm">
-            Instalar Aplicativo na Tela Inicial
+          <p className="font-display font-semibold text-xs leading-tight">
+            Instalar app na Tela Inicial
           </p>
-          <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
-            Toque nos <MoreVertical className="w-3.5 h-3.5 inline text-[#7ED957]" /> 3 pontinhos
-            (ou <Share className="w-3.5 h-3.5 inline text-[#7ED957]" /> Compartilhar) e escolha{" "}
-            <strong>Adicionar à Tela de Início</strong>.
+          <p className="text-[11px] text-slate-300 mt-0.5 leading-snug">
+            Toque em <MoreVertical className="w-3 h-3 inline text-[#7ED957]" /> ou{" "}
+            <Share className="w-3 h-3 inline text-[#7ED957]" /> e escolha{" "}
+            <strong className="text-white">Adicionar à Tela de Início</strong>.
           </p>
         </div>
 
@@ -30,9 +30,9 @@ export function PwaInstallBanner() {
           type="button"
           onClick={() => setDismissed(true)}
           aria-label="Fechar aviso"
-          className="p-1 text-slate-400 hover:text-white cursor-pointer"
+          className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-white/10 cursor-pointer shrink-0"
         >
-          <X className="w-4 h-4" />
+          <X className="w-3.5 h-3.5" />
         </button>
       </div>
     </div>

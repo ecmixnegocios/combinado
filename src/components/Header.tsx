@@ -54,17 +54,12 @@ export function Header() {
         {/* Barra principal */}
         <div className="max-w-[1240px] mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-1.5 sm:gap-2 shrink-0 group">
-            <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#00B048]/10 border border-[#00B048]/25 p-1 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-              <img
-                src="/brand/logo.png"
-                alt="Combinado"
-                className="w-full h-full object-contain"
-              />
-            </span>
-            <span className="font-display font-bold text-lg sm:text-2xl leading-none tracking-tight bg-gradient-to-r from-[#006E2A] via-[#00B048] to-[#7ED957] bg-clip-text text-transparent">
-              Combinado
-            </span>
+          <Link href="/" className="flex items-center shrink-0 group">
+            <img
+              src="/brand/logo-v1.png"
+              alt="Combinado"
+              className="h-7 sm:h-8 w-auto object-contain group-hover:scale-[1.02] transition-transform"
+            />
           </Link>
 
           {/* Actions */}

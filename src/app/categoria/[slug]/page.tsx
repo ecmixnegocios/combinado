@@ -2,12 +2,11 @@
 
 import { use, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, MapPin, Sparkles } from "lucide-react";
+import { ArrowLeft, MapPin } from "lucide-react";
 import { useApp } from "@/components/AppProvider";
 import { CategoryIcon } from "@/components/CategoryIcon";
 import { ProviderCard } from "@/components/ProviderCard";
 import { BackNavigation } from "@/components/BackNavigation";
-import { AdvertiseHereBanner } from "@/components/AdvertiseHereBanner";
 import { BOA_VISTA_NEIGHBORHOODS } from "@/lib/neighborhoods";
 
 export default function CategoryPage({
@@ -16,9 +15,8 @@ export default function CategoryPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = use(params);
-  const { categories, getCatalogProviders, getCategoryBanner } = useApp();
+  const { categories, getCatalogProviders } = useApp();
   const [neighborhood, setNeighborhood] = useState("");
-  const categoryBanner = getCategoryBanner(slug);
 
   const category = useMemo(
     () => categories.find((c) => c.slug === slug),
@@ -89,44 +87,6 @@ export default function CategoryPage({
           </select>
         </div>
       </div>
-
-      {/* Patrocinador exclusivo da categoria (ou CTA Anuncie Aqui) */}
-      {categoryBanner ? (
-        <a
-          href={categoryBanner.target_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group relative block overflow-hidden rounded-2xl bg-[#0F1A24] shadow-[var(--shadow-level-1)] hover:shadow-[var(--shadow-level-2)] transition-all"
-        >
-          <div className="relative h-24 sm:h-28 w-full">
-            <img
-              src={categoryBanner.image_url}
-              alt={categoryBanner.title}
-              className="w-full h-full object-cover opacity-50 group-hover:scale-[1.02] transition-transform duration-300"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#050C16]/90 via-[#050C16]/65 to-transparent" />
-            <div className="absolute inset-0 p-4 sm:p-5 flex items-center justify-between gap-4">
-              <div className="space-y-1 min-w-0">
-                <span className="inline-flex items-center gap-1.5 w-fit px-2.5 py-0.5 rounded-full bg-white/15 text-[10px] font-bold text-[#FDBA74]">
-                  <Sparkles className="w-3 h-3" />
-                  Parceiro em {category.name}
-                </span>
-                <p className="font-display font-bold text-xs sm:text-base text-white line-clamp-2">
-                  {categoryBanner.title}
-                </p>
-              </div>
-              <span className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#EA580C] text-white text-xs font-semibold shrink-0">
-                Conferir <ExternalLink className="w-3.5 h-3.5" />
-              </span>
-            </div>
-          </div>
-        </a>
-      ) : (
-        <AdvertiseHereBanner
-          contextLabel={`Espaço Disponível · Parceiro em ${category.name}`}
-          categoryName={category.name}
-        />
-      )}
 
       {providers.length === 0 ? (
         <div className="rounded-2xl bg-white border border-[#0F1A24]/8 p-8 text-center">
