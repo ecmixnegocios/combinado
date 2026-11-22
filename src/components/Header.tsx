@@ -6,9 +6,7 @@ import {
   Clock,
   HelpCircle,
   MapPin,
-  MessageCircle,
   ShieldAlert,
-  ShieldCheck,
   User,
   UserCheck,
   Wrench,
@@ -196,7 +194,7 @@ export function Header() {
               <div className="rounded-xl bg-[#EBF9EF] border border-[#00B048]/25 p-4 space-y-2.5">
                 <div className="flex items-start gap-2 font-display font-bold text-sm text-[#006e2a] leading-snug">
                   <UserCheck className="w-4 h-4 shrink-0 mt-0.5" />
-                  <span>Para quem quer contratar é muito fácil</span>
+                  <span>Para quem quer contratar!</span>
                 </div>
                 <ol className="text-xs text-[#121d27] space-y-2 list-decimal list-inside leading-relaxed">
                   <li>Escolha a categoria do profissional que você precisa.</li>
@@ -214,7 +212,7 @@ export function Header() {
               <div className="rounded-xl bg-orange-50 border border-orange-200 p-4 space-y-2.5">
                 <div className="flex items-start gap-2 font-display font-bold text-sm text-[#C2410C] leading-snug">
                   <Wrench className="w-4 h-4 shrink-0 mt-0.5" />
-                  <span>Para quem oferece serviços</span>
+                  <span>Para quem quer oferecer serviços!</span>
                 </div>
                 <ol className="text-xs text-[#121d27] space-y-2 list-decimal list-inside leading-relaxed">
                   <li>Cadastre-se no Combinado com seus dados e uma foto real.</li>
@@ -228,17 +226,6 @@ export function Header() {
                   </li>
                 </ol>
               </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-2 text-xs text-[#3d4a3c]">
-              <span className="inline-flex items-center gap-1.5 font-medium text-[#006e2a]">
-                <ShieldCheck className="w-4 h-4" />
-                Avaliação mútua obrigatória
-              </span>
-              <span className="inline-flex items-center gap-1 font-medium">
-                <MessageCircle className="w-3.5 h-3.5 text-[#00B048]" />
-                Sem taxas escondidas
-              </span>
             </div>
           </div>
         </div>
