@@ -193,27 +193,39 @@ export function Header() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="rounded-xl bg-[#EBF9EF] border border-[#00B048]/25 p-4 space-y-2">
-                <div className="flex items-center gap-2 font-display font-bold text-sm text-[#006e2a]">
-                  <UserCheck className="w-4 h-4" />
-                  Para quem quer contratar
+              <div className="rounded-xl bg-[#EBF9EF] border border-[#00B048]/25 p-4 space-y-2.5">
+                <div className="flex items-start gap-2 font-display font-bold text-sm text-[#006e2a] leading-snug">
+                  <UserCheck className="w-4 h-4 shrink-0 mt-0.5" />
+                  <span>Para quem quer contratar é muito fácil</span>
                 </div>
-                <ol className="text-xs text-[#121d27] space-y-1.5 list-decimal list-inside leading-relaxed">
-                  <li>Escolha o serviço ou filtre pelo seu bairro em Boa Vista.</li>
-                  <li>Confira o termômetro de avaliação real da vizinhança.</li>
-                  <li>Chame o profissional direto no WhatsApp e combine o serviço.</li>
+                <ol className="text-xs text-[#121d27] space-y-2 list-decimal list-inside leading-relaxed">
+                  <li>Escolha a categoria do profissional que você precisa.</li>
+                  <li>
+                    Navegue entre as opções de profissionais e confira o{" "}
+                    <strong>termômetro de avaliação</strong>.
+                  </li>
+                  <li>
+                    Viu que está disponível? Clique no <strong>WhatsApp</strong>{" "}
+                    dele e pronto!
+                  </li>
                 </ol>
               </div>
 
-              <div className="rounded-xl bg-orange-50 border border-orange-200 p-4 space-y-2">
-                <div className="flex items-center gap-2 font-display font-bold text-sm text-[#C2410C]">
-                  <Wrench className="w-4 h-4" />
-                  Para quem oferece serviços
+              <div className="rounded-xl bg-orange-50 border border-orange-200 p-4 space-y-2.5">
+                <div className="flex items-start gap-2 font-display font-bold text-sm text-[#C2410C] leading-snug">
+                  <Wrench className="w-4 h-4 shrink-0 mt-0.5" />
+                  <span>Para quem oferece serviços</span>
                 </div>
-                <ol className="text-xs text-[#121d27] space-y-1.5 list-decimal list-inside leading-relaxed">
-                  <li>Cadastre seu nome, WhatsApp com código e CPF.</li>
-                  <li>Ative seu status para <strong>Disponível</strong> quando puder atender.</li>
-                  <li>Receba clientes direto no seu WhatsApp e suba no ranking!</li>
+                <ol className="text-xs text-[#121d27] space-y-2 list-decimal list-inside leading-relaxed">
+                  <li>Cadastre-se no Combinado com seus dados e uma foto real.</li>
+                  <li>
+                    Descreva os serviços que faz e marque seu perfil como{" "}
+                    <strong>Disponível</strong>.
+                  </li>
+                  <li>
+                    E pronto: comece a receber clientes direto no{" "}
+                    <strong>WhatsApp</strong>!
+                  </li>
                 </ol>
               </div>
             </div>
