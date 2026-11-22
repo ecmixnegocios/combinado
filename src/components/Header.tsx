@@ -52,13 +52,13 @@ export function Header() {
         </div>
 
         {/* Barra principal */}
-        <div className="max-w-[1240px] mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2">
+        <div className="max-w-[1240px] mx-auto px-3 sm:px-6 h-15 sm:h-[68px] flex items-center justify-between gap-2">
           {/* Logo */}
           <Link href="/" className="flex items-center shrink-0 group">
             <img
               src="/brand/logo-v1.png"
               alt="Combinado"
-              className="h-7 sm:h-8 w-auto object-contain group-hover:scale-[1.02] transition-transform"
+              className="h-9 sm:h-11 w-auto max-w-[155px] sm:max-w-none object-contain group-hover:scale-[1.02] transition-transform"
             />
           </Link>
 
