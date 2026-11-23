@@ -20,6 +20,7 @@ import {
   ProviderFullProfile,
 } from "@/types/database";
 import { buildWhatsAppUrl, cleanDigits, validateCPF } from "@/utils/validators";
+import { ENABLE_DEMO_USERS } from "@/lib/demo-config";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import {
   ensureUserProfileFromAuth,
@@ -204,9 +205,9 @@ function recalculateAllRatings(
 }
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const supabaseActive = isSupabaseConfigured();
+  const demoModeActive = ENABLE_DEMO_USERS || !isSupabaseConfigured();
   const [state, setState] = useState<MockState>(
-    supabaseActive ? INITIAL_STATE : DEMO_INITIAL_STATE
+    demoModeActive ? DEMO_INITIAL_STATE : INITIAL_STATE
   );
   const [isHydrated, setIsHydrated] = useState(false);
   const [nowMs, setNowMs] = useState<number>(() => Date.now());
@@ -215,7 +216,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (!supabaseActive) {
+      if (demoModeActive) {
         try {
           const raw = localStorage.getItem(STORAGE_KEY);
           if (raw) {
@@ -249,16 +250,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setIsHydrated(true);
     }, 0);
     return () => clearTimeout(timer);
-  }, [supabaseActive]);
+  }, [demoModeActive]);
 
   useEffect(() => {
-    if (!isHydrated || supabaseActive) return;
+    if (!isHydrated || !demoModeActive) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
       // ignore storage errors
     }
-  }, [state, isHydrated, supabaseActive]);
+  }, [state, isHydrated, demoModeActive]);
 
   useEffect(() => {
     if (!isHydrated || !isSupabaseConfigured()) return;

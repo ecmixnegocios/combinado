@@ -20,6 +20,7 @@ import {
 import { useApp } from "./AppProvider";
 import { AvatarUploader } from "./AvatarUploader";
 import { formatWhatsApp, formatCPF, validateCPF, cleanDigits } from "@/utils/validators";
+import { ENABLE_DEMO_USERS } from "@/lib/demo-config";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
 
 export function QuickAuthModal() {
@@ -597,8 +598,8 @@ export function QuickAuthModal() {
           </form>
         )}
 
-        {/* Acesso Rápido Demo no rodapé do modal (apenas quando Supabase não está configurado) */}
-        {!supabaseEnabled && (
+        {/* Acesso Rápido Demo no rodapé do modal */}
+        {(ENABLE_DEMO_USERS || !supabaseEnabled) && (
           <div className="mt-5 pt-4 border-t border-[#0F1A24]/10">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-[#3d4a3c] mb-2 text-center">
               Ou entre rápido para testar (Modo Demonstração)
