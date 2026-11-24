@@ -99,14 +99,20 @@ export function ReputationThermometer({
   ratingAvg,
   reviewsCount,
   size = "compact",
+  fullWidth = false,
 }: {
   ratingAvg: number;
   reviewsCount: number;
   size?: "compact" | "detailed";
+  fullWidth?: boolean;
 }) {
   const activeLevel = getThermometerLevel(ratingAvg, reviewsCount);
   const info = THERMOMETER_LEVELS[activeLevel];
-  const maxWidth = size === "detailed" ? "max-w-[300px]" : "max-w-[240px]";
+  const maxWidth = fullWidth
+    ? "w-full"
+    : size === "detailed"
+    ? "max-w-[300px]"
+    : "max-w-[240px]";
 
   return (
     <div className={`space-y-1 ${maxWidth}`}>
