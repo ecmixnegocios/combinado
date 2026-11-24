@@ -97,7 +97,11 @@ export default function CategoryPage({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {providers.map((provider) => (
-            <ProviderCard key={provider.id} provider={provider} />
+            <ProviderCard
+              key={provider.id}
+              provider={provider}
+              activeCategorySlug={slug}
+            />
           ))}
         </div>
       )}

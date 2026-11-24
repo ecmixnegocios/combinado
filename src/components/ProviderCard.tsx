@@ -1,15 +1,26 @@
 import Link from "next/link";
 import { BadgeCheck, ChevronRight, Clock, MapPin } from "lucide-react";
 import { ProviderCatalogItem } from "@/types/database";
+import { CategoryIcon } from "./CategoryIcon";
 import { ReputationThermometer } from "./ReputationThermometer";
-import { formatProviderTitle } from "@/utils/validators";
+import { getCategoryPrefix } from "@/utils/validators";
 
-export function ProviderCard({ provider }: { provider: ProviderCatalogItem }) {
+export function ProviderCard({
+  provider,
+  activeCategorySlug,
+}: {
+  provider: ProviderCatalogItem;
+  activeCategorySlug?: string;
+}) {
   const isAvailable = provider.is_available;
-  const formattedTitle = formatProviderTitle(
-    provider.display_name,
-    provider.categories[0]?.name
-  );
+  const primaryCategory =
+    (activeCategorySlug
+      ? provider.categories.find((c) => c.slug === activeCategorySlug)
+      : undefined) ?? provider.categories[0];
+  const otherCategories = primaryCategory
+    ? provider.categories.filter((c) => c.id !== primaryCategory.id)
+    : provider.categories;
+  const primaryRoleLabel = getCategoryPrefix(primaryCategory?.name);
 
   return (
     <Link
@@ -41,10 +52,17 @@ export function ProviderCard({ provider }: { provider: ProviderCatalogItem }) {
 
           <div className="flex-1 min-w-0">
             <h3 className="font-display font-bold text-base sm:text-lg text-[#121d27] leading-snug truncate group-hover:text-[#006e2a] transition-colors">
-              {formattedTitle}
+              {provider.display_name}
             </h3>
 
             <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+              {primaryCategory && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#0F1A24] text-white shrink-0">
+                  <CategoryIcon name={primaryCategory.icon_name} className="w-3 h-3 text-[#7ED957]" />
+                  {primaryRoleLabel || primaryCategory.name}
+                </span>
+              )}
+
               <span
                 className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold shrink-0 border ${
                   isAvailable
@@ -88,18 +106,23 @@ export function ProviderCard({ provider }: { provider: ProviderCatalogItem }) {
           />
         </div>
 
-        {/* 3. Especialidades e Descrição */}
+        {/* 3. Outras especialidades e Descrição */}
         <div className="mt-3 space-y-2">
-          <div className="flex flex-wrap gap-1.5">
-            {provider.categories.map((cat) => (
-              <span
-                key={cat.id}
-                className="px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 text-[#121d27]/80 border border-[#0F1A24]/6"
-              >
-                {cat.name}
+          {otherCategories.length > 0 && (
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-[11px] font-medium text-[#3d4a3c]">
+                Também atende:
               </span>
-            ))}
-          </div>
+              {otherCategories.map((cat) => (
+                <span
+                  key={cat.id}
+                  className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 text-[#121d27]/80 border border-[#0F1A24]/6"
+                >
+                  {cat.name}
+                </span>
+              ))}
+            </div>
+          )}
 
           {provider.bio && (
             <p className="text-xs sm:text-sm text-[#121d27]/75 line-clamp-2 leading-relaxed">
