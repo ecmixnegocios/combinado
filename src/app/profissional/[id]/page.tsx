@@ -18,7 +18,8 @@ import {
   ThermometerLevel,
 } from "@/components/ReputationThermometer";
 import { BackNavigation } from "@/components/BackNavigation";
-import { formatProviderTitle } from "@/utils/validators";
+import { CategoryIcon } from "@/components/CategoryIcon";
+import { getCategoryPrefix } from "@/utils/validators";
 
 export default function ProviderProfilePage({
   params,
@@ -102,68 +103,89 @@ export default function ProviderProfilePage({
 
           {/* Info Principal */}
           <div className="flex-1 w-full">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="font-display font-bold text-2xl sm:text-3xl text-[#121d27]">
-                    {formatProviderTitle(
-                      provider.display_name,
-                      provider.categories[0]?.name
-                    )}
-                  </h1>
-                  {provider.is_verified && (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-700 text-xs font-bold">
-                      <BadgeCheck className="w-4 h-4 text-sky-600" />
-                      Identidade Verificada
-                    </span>
+            {(() => {
+              const primaryCategory = provider.categories[0];
+              const otherCategories = provider.categories.slice(1);
+              const primaryRoleLabel = getCategoryPrefix(primaryCategory?.name);
+
+              return (
+                <>
+                  <div>
+                    <h1 className="font-display font-bold text-2xl sm:text-3xl text-[#121d27] leading-tight">
+                      {provider.full_name || provider.display_name}
+                    </h1>
+
+                    <div className="flex flex-wrap items-center gap-2 mt-2.5">
+                      {primaryCategory && (
+                        <Link
+                          href={`/categoria/${primaryCategory.slug}`}
+                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#0F1A24] text-white hover:bg-[#1e2d3b] transition-colors"
+                        >
+                          <CategoryIcon
+                            name={primaryCategory.icon_name}
+                            className="w-3.5 h-3.5 text-[#7ED957]"
+                          />
+                          {primaryRoleLabel || primaryCategory.name}
+                        </Link>
+                      )}
+
+                      <span
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${
+                          provider.is_available
+                            ? "bg-[#00B048]/12 text-[#006e2a] border-[#00B048]/25"
+                            : "bg-amber-50 text-amber-800 border-amber-200"
+                        }`}
+                      >
+                        {provider.is_available ? (
+                          <>
+                            <span className="w-2 h-2 rounded-full bg-[#00B048] animate-pulse" />
+                            Disponível Agora
+                          </>
+                        ) : (
+                          <>
+                            <Clock className="w-3.5 h-3.5 text-amber-600" />
+                            Ocupado no momento
+                          </>
+                        )}
+                      </span>
+
+                      {provider.is_verified && (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-700 text-xs font-bold">
+                          <BadgeCheck className="w-4 h-4 text-sky-600" />
+                          Identidade Verificada
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Termômetro de Reputação do Profissional */}
+                  <div className="mt-4">
+                    <ReputationThermometer
+                      ratingAvg={provider.pro_rating_avg}
+                      reviewsCount={provider.pro_reviews_count}
+                      size="detailed"
+                    />
+                  </div>
+
+                  {otherCategories.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-2 mt-4">
+                      <span className="text-xs font-medium text-[#3d4a3c]">
+                        Também atende:
+                      </span>
+                      {otherCategories.map((cat) => (
+                        <Link
+                          key={cat.id}
+                          href={`/categoria/${cat.slug}`}
+                          className="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-100 text-[#121d27]/80 border border-[#0F1A24]/6 hover:bg-slate-200/70 transition-colors"
+                        >
+                          {cat.name}
+                        </Link>
+                      ))}
+                    </div>
                   )}
-                </div>
-                <p className="text-xs text-[#3d4a3c] mt-0.5">
-                  Nome completo: {provider.full_name}
-                </p>
-              </div>
-
-              <span
-                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold border ${
-                  provider.is_available
-                    ? "bg-[#00B048]/12 text-[#006e2a] border-[#00B048]/25"
-                    : "bg-amber-50 text-amber-800 border-amber-200"
-                }`}
-              >
-                {provider.is_available ? (
-                  <>
-                    <span className="w-2 h-2 rounded-full bg-[#00B048] animate-pulse" />
-                    Disponível Agora
-                  </>
-                ) : (
-                  <>
-                    <Clock className="w-3.5 h-3.5 text-amber-600" />
-                    Ocupado no momento
-                  </>
-                )}
-              </span>
-            </div>
-
-            {/* Termômetro de Reputação do Profissional */}
-            <div className="mt-3">
-              <ReputationThermometer
-                ratingAvg={provider.pro_rating_avg}
-                reviewsCount={provider.pro_reviews_count}
-                size="detailed"
-              />
-            </div>
-
-            <div className="flex flex-wrap gap-2 mt-4">
-              {provider.categories.map((cat) => (
-                <Link
-                  key={cat.id}
-                  href={`/categoria/${cat.slug}`}
-                  className="px-3 py-1 rounded-full text-xs font-semibold bg-[#edf4ff] text-[#006e2a] hover:bg-[#d8e4f2] transition-colors"
-                >
-                  {cat.name}
-                </Link>
-              ))}
-            </div>
+                </>
+              );
+            })()}
 
             {/* Metadados: Experiência e Bairros */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5 pt-4 border-t border-[#0F1A24]/8">
