@@ -40,8 +40,21 @@ export default function AdminPage() {
   const [bannerCategorySlug, setBannerCategorySlug] = useState("");
   const [bannerDate, setBannerDate] = useState("");
   const [userSearch, setUserSearch] = useState("");
+  const [userFilter, setUserFilter] = useState<
+    "all" | "providers" | "unverified" | "banned"
+  >("all");
+  const [userPage, setUserPage] = useState(1);
+
+  const [reviewSearch, setReviewSearch] = useState("");
+  const [reviewFilter, setReviewFilter] = useState<
+    "all" | "critical" | "regular" | "positive"
+  >("all");
+  const [reviewPage, setReviewPage] = useState(1);
+
   const [newCatName, setNewCatName] = useState("");
   const [newCatIcon, setNewCatIcon] = useState("Wrench");
+
+  const PAGE_SIZE = 15;
 
   if (!currentUser?.is_admin) {
     return (
@@ -69,6 +82,14 @@ export default function AdminPage() {
   }
 
   const filteredUsers = profiles.filter((p) => {
+    if (userFilter === "providers" && !p.is_provider) return false;
+    if (userFilter === "banned" && !p.is_banned) return false;
+    if (userFilter === "unverified") {
+      if (!p.is_provider) return false;
+      const pd = providerDetails.find((d) => d.profile_id === p.id);
+      if (pd?.is_verified) return false;
+    }
+
     const q = userSearch.trim().toLowerCase();
     if (!q) return true;
     return (
@@ -77,8 +98,43 @@ export default function AdminPage() {
     );
   });
 
-  const reviewedInteractions = interactions.filter(
-    (i) => i.client_comment || i.provider_comment
+  const userTotalPages = Math.max(1, Math.ceil(filteredUsers.length / PAGE_SIZE));
+  const safeUserPage = Math.min(userPage, userTotalPages);
+  const paginatedUsers = filteredUsers.slice(
+    (safeUserPage - 1) * PAGE_SIZE,
+    safeUserPage * PAGE_SIZE
+  );
+
+  const reviewedInteractions = interactions.filter((i) => {
+    if (!i.client_comment && !i.provider_comment) return false;
+
+    const ratings = [i.client_rating, i.provider_rating].filter(
+      (r): r is number => typeof r === "number"
+    );
+    if (reviewFilter === "critical" && !ratings.some((r) => r <= 2)) return false;
+    if (reviewFilter === "regular" && !ratings.some((r) => r === 3)) return false;
+    if (reviewFilter === "positive" && !ratings.some((r) => r >= 4)) return false;
+
+    const q = reviewSearch.trim().toLowerCase();
+    if (!q) return true;
+    const client = profiles.find((p) => p.id === i.client_id);
+    const provider = profiles.find((p) => p.id === i.provider_id);
+    return (
+      (client?.display_name.toLowerCase().includes(q) ?? false) ||
+      (provider?.display_name.toLowerCase().includes(q) ?? false) ||
+      (i.client_comment?.toLowerCase().includes(q) ?? false) ||
+      (i.provider_comment?.toLowerCase().includes(q) ?? false)
+    );
+  });
+
+  const reviewTotalPages = Math.max(
+    1,
+    Math.ceil(reviewedInteractions.length / PAGE_SIZE)
+  );
+  const safeReviewPage = Math.min(reviewPage, reviewTotalPages);
+  const paginatedReviews = reviewedInteractions.slice(
+    (safeReviewPage - 1) * PAGE_SIZE,
+    safeReviewPage * PAGE_SIZE
   );
 
   const handleCreateBanner = (e: React.FormEvent) => {
@@ -236,15 +292,48 @@ export default function AdminPage() {
             <input
               type="text"
               value={userSearch}
-              onChange={(e) => setUserSearch(e.target.value)}
+              onChange={(e) => {
+                setUserSearch(e.target.value);
+                setUserPage(1);
+              }}
               placeholder="Buscar usuário..."
               className="w-full text-xs bg-transparent focus:outline-none"
             />
           </div>
         </div>
 
+        <div className="flex flex-wrap gap-1.5">
+          {[
+            { id: "all", label: "Todos" },
+            { id: "providers", label: "Profissionais" },
+            { id: "unverified", label: "Aguardando Verificação" },
+            { id: "banned", label: "Banidos" },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => {
+                setUserFilter(tab.id as typeof userFilter);
+                setUserPage(1);
+              }}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
+                userFilter === tab.id
+                  ? "bg-[#0F1A24] text-white"
+                  : "bg-[#F6F8FC] text-[#3d4a3c] hover:bg-slate-200/70"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
         <div className="divide-y divide-[#0F1A24]/8">
-          {filteredUsers.map((u) => (
+          {paginatedUsers.length === 0 ? (
+            <p className="py-6 text-center text-xs text-[#3d4a3c]">
+              Nenhum usuário encontrado com esse filtro.
+            </p>
+          ) : (
+            paginatedUsers.map((u) => (
             <div
               key={u.id}
               className="py-3 flex flex-wrap items-center justify-between gap-3"
@@ -316,18 +405,92 @@ export default function AdminPage() {
                 </div>
               )}
             </div>
-          ))}
+            ))
+          )}
         </div>
+
+        {userTotalPages > 1 && (
+          <div className="flex items-center justify-between pt-2 border-t border-[#0F1A24]/8 text-xs text-[#3d4a3c]">
+            <span>
+              Página <strong>{safeUserPage}</strong> de <strong>{userTotalPages}</strong>
+            </span>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                disabled={safeUserPage <= 1}
+                onClick={() => setUserPage((p) => Math.max(1, p - 1))}
+                className="px-3 py-1.5 rounded-full border border-[#0F1A24]/15 font-semibold disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed hover:bg-slate-50"
+              >
+                Anterior
+              </button>
+              <button
+                type="button"
+                disabled={safeUserPage >= userTotalPages}
+                onClick={() => setUserPage((p) => Math.min(userTotalPages, p + 1))}
+                className="px-3 py-1.5 rounded-full border border-[#0F1A24]/15 font-semibold disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed hover:bg-slate-50"
+              >
+                Próxima
+              </button>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* 3. Moderação de Avaliações */}
       <section className="rounded-2xl bg-white border border-[#0F1A24]/8 p-5 sm:p-6 shadow-[var(--shadow-level-1)] space-y-4">
-        <h2 className="font-display font-bold text-lg text-[#121d27]">
-          Moderação de Avaliações ({reviewedInteractions.length})
-        </h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-display font-bold text-lg text-[#121d27]">
+            Moderação de Avaliações ({reviewedInteractions.length})
+          </h2>
+          <div className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-[#0F1A24]/15 bg-[#F6F8FC] w-full sm:w-64">
+            <Search className="w-4 h-4 text-slate-400" />
+            <input
+              type="text"
+              value={reviewSearch}
+              onChange={(e) => {
+                setReviewSearch(e.target.value);
+                setReviewPage(1);
+              }}
+              placeholder="Buscar por nome ou comentário..."
+              className="w-full text-xs bg-transparent focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-1.5">
+          {[
+            { id: "all", label: "Todas" },
+            { id: "critical", label: "Notas Críticas (1-2)" },
+            { id: "regular", label: "Regulares (3)" },
+            { id: "positive", label: "Positivas (4-5)" },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => {
+                setReviewFilter(tab.id as typeof reviewFilter);
+                setReviewPage(1);
+              }}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
+                reviewFilter === tab.id
+                  ? tab.id === "critical"
+                    ? "bg-[#ba1a1a] text-white"
+                    : "bg-[#0F1A24] text-white"
+                  : "bg-[#F6F8FC] text-[#3d4a3c] hover:bg-slate-200/70"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
         <div className="space-y-3">
-          {reviewedInteractions.map((inter) => {
+          {paginatedReviews.length === 0 ? (
+            <p className="py-6 text-center text-xs text-[#3d4a3c]">
+              Nenhuma avaliação encontrada com esse filtro.
+            </p>
+          ) : (
+            paginatedReviews.map((inter) => {
             const client = profiles.find((p) => p.id === inter.client_id);
             const provider = profiles.find((p) => p.id === inter.provider_id);
             return (
@@ -384,9 +547,37 @@ export default function AdminPage() {
                   <Trash2 className="w-3.5 h-3.5" /> Excluir
                 </button>
               </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
+
+        {reviewTotalPages > 1 && (
+          <div className="flex items-center justify-between pt-2 border-t border-[#0F1A24]/8 text-xs text-[#3d4a3c]">
+            <span>
+              Página <strong>{safeReviewPage}</strong> de{" "}
+              <strong>{reviewTotalPages}</strong>
+            </span>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                disabled={safeReviewPage <= 1}
+                onClick={() => setReviewPage((p) => Math.max(1, p - 1))}
+                className="px-3 py-1.5 rounded-full border border-[#0F1A24]/15 font-semibold disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed hover:bg-slate-50"
+              >
+                Anterior
+              </button>
+              <button
+                type="button"
+                disabled={safeReviewPage >= reviewTotalPages}
+                onClick={() => setReviewPage((p) => Math.min(reviewTotalPages, p + 1))}
+                className="px-3 py-1.5 rounded-full border border-[#0F1A24]/15 font-semibold disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed hover:bg-slate-50"
+              >
+                Próxima
+              </button>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* 4. Gestão de Categorias */}
