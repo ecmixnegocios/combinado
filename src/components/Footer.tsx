@@ -7,7 +7,7 @@ export function Footer() {
         {/* Logo no rodapé + Slogan logo abaixo */}
         <Link href="/" className="inline-flex items-center group opacity-85 hover:opacity-100 transition-opacity">
           <img
-            src="/brand/logo-v4.png"
+            src="/brand/logo-v3.png"
             alt="Combinado"
             className="h-7 sm:h-8 w-auto object-contain"
           />

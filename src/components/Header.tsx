@@ -54,7 +54,7 @@ export function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center shrink-0 group">
             <img
-              src="/brand/logo-v2.png"
+              src="/brand/logo-v1.png"
               alt="Combinado"
               className="h-9 sm:h-11 w-auto max-w-[155px] sm:max-w-none object-contain group-hover:scale-[1.02] transition-transform"
             />
